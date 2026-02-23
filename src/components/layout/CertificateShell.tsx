@@ -18,14 +18,14 @@ export default function CertificateShell({
       {/* Inner border */}
       <div className="absolute inset-[6px] border border-gold-border" />
 
-      <div className="relative h-full flex flex-col p-8 sm:p-10">
+      <div className="relative h-full flex flex-col p-8 sm:p-10 min-h-0">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 print-fit-header shrink-0">
           <GoldiamLogo size="sm" />
         </div>
 
         {/* Title */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 print-fit-title shrink-0">
           <h1 className="font-serif font-bold text-xl sm:text-2xl uppercase tracking-[0.15em] text-dark">
             {title}
           </h1>
@@ -33,12 +33,12 @@ export default function CertificateShell({
         </div>
 
         {/* Content */}
-        <div className="flex-1 text-sm leading-relaxed text-dark">
+        <div className="flex-1 min-h-0 text-sm leading-relaxed text-dark print-fit-content">
           {children}
         </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-gold-border/40">
+        <div className="mt-6 pt-4 border-t border-gold-border/40 print-fit-footer shrink-0">
           <div className="text-center text-[10px] text-muted leading-snug space-y-0.5">
             <div className="font-bold text-dark/60">{GOLDIAM_ADDRESS}</div>
             <div>

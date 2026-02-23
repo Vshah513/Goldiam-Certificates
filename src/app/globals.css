@@ -24,23 +24,70 @@ body {
     background: white !important;
     margin: 0;
     padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .no-print {
     display: none !important;
   }
 
+  /* Force exactly one A4 page – no overflow to second page */
   .certificate-shell {
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0;
-    padding: 15mm;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 10mm !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+    overflow: hidden !important;
+    aspect-ratio: auto !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Tighter layout in print so content fits on one page */
+  .certificate-shell .print-fit-header {
+    margin-bottom: 0.75rem !important;
+  }
+  .certificate-shell .print-fit-title {
+    margin-bottom: 0.75rem !important;
+  }
+  .certificate-shell .print-fit-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+  .certificate-shell .print-fit-footer {
+    margin-top: 0.75rem !important;
+    padding-top: 0.5rem !important;
+    font-size: 9px !important;
+  }
+
+  .certificate-shell table {
+    font-size: 0.75rem !important;
+  }
+  .certificate-shell th,
+  .certificate-shell td {
+    padding: 0.15rem 0.35rem !important;
+  }
+  .certificate-shell p {
+    margin-bottom: 0.35rem !important;
   }
 
   @page {
     size: A4;
     margin: 0;
+  }
+}
+
+/* Mobile print: constrain width so layout doesn’t expand beyond one page */
+@media print and (max-width: 768px) {
+  html, body {
+    overflow: hidden !important;
   }
 }

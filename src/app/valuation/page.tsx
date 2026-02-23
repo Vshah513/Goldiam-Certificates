@@ -6,6 +6,7 @@ import FormPanel from "@/components/layout/FormPanel";
 import ValuationTemplate from "@/components/templates/ValuationTemplate";
 import PrintButton from "@/components/PrintButton";
 import ExportPDFButton from "@/components/ExportPDFButton";
+import SaveCertificateButton from "@/components/SaveCertificateButton";
 import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
@@ -83,6 +84,13 @@ export default function ValuationPage() {
             &larr; Back
           </Link>
           <PrintButton contentRef={certificateRef} documentTitle={docTitle} />
+          <SaveCertificateButton
+            contentRef={certificateRef}
+            filename={`${docTitle}.pdf`}
+            certificateType="valuation"
+            formData={data}
+            title={`Valuation – ${data.clientName || "Draft"} – ${data.date}`}
+          />
           <ExportPDFButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}

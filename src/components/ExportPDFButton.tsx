@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { RefObject } from "react";
+import { exportCertificateToPDF } from "@/lib/exportCertificatePDF";
 
 interface ExportPDFButtonProps {
   contentRef: RefObject<HTMLDivElement | null>;
@@ -11,23 +13,33 @@ export default function ExportPDFButton({
   contentRef,
   filename = "Goldiam_Document.pdf",
 }: ExportPDFButtonProps) {
+  const [error, setError] = useState<string | null>(null);
+
   const handleExport = async () => {
-    if (!contentRef.current) return;
-    const html2pdf = (await import("html2pdf.js")).default;
-    html2pdf()
-      .set({
-        margin: 0,
-        filename,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(contentRef.current)
-      .save();
+    if (!contentRef.current) {
+      setError("Switch to the Preview tab and try again.");
+      setTimeout(() => setError(null), 5000);
+      return;
+    }
+    setError(null);
+    try {
+      await exportCertificateToPDF(contentRef.current, filename);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to generate PDF";
+      setError(message);
+      setTimeout(() => setError(null), 6000);
+    }
   };
 
   return (
-    <button
+    <span className="inline-flex flex-col items-end gap-1">
+      {error && (
+        <span className="text-xs text-red-600 max-w-[200px] text-right">
+          {error}
+        </span>
+      )}
+      <button
       onClick={handleExport}
       className="inline-flex items-center gap-2 rounded-md border border-gold bg-white px-4 py-2 text-sm font-bold text-gold shadow-sm transition-colors hover:bg-gold/5 active:bg-gold/10"
     >
@@ -46,5 +58,6 @@ export default function ExportPDFButton({
       </svg>
       Export PDF
     </button>
+    </span>
   );
 }

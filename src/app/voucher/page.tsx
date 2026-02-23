@@ -6,6 +6,7 @@ import FormPanel from "@/components/layout/FormPanel";
 import VoucherTemplate from "@/components/templates/VoucherTemplate";
 import PrintButton from "@/components/PrintButton";
 import ExportPDFButton from "@/components/ExportPDFButton";
+import SaveCertificateButton from "@/components/SaveCertificateButton";
 import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
@@ -66,6 +67,13 @@ export default function VoucherPage() {
             &larr; Back
           </Link>
           <PrintButton contentRef={certificateRef} documentTitle={docTitle} />
+          <SaveCertificateButton
+            contentRef={certificateRef}
+            filename={`${docTitle}.pdf`}
+            certificateType="voucher"
+            formData={data}
+            title={`Voucher – ${data.recipientName || "Draft"} – ${data.issueDate}`}
+          />
           <ExportPDFButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}

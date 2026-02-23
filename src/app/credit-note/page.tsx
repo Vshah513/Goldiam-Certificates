@@ -6,6 +6,7 @@ import FormPanel from "@/components/layout/FormPanel";
 import CreditNoteTemplate from "@/components/templates/CreditNoteTemplate";
 import PrintButton from "@/components/PrintButton";
 import ExportPDFButton from "@/components/ExportPDFButton";
+import SaveCertificateButton from "@/components/SaveCertificateButton";
 import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
@@ -57,6 +58,13 @@ export default function CreditNotePage() {
             &larr; Back
           </Link>
           <PrintButton contentRef={certificateRef} documentTitle={docTitle} />
+          <SaveCertificateButton
+            contentRef={certificateRef}
+            filename={`${docTitle}.pdf`}
+            certificateType="credit-note"
+            formData={data}
+            title={`Credit Note – ${data.clientName || "Draft"} – ${data.dateIssued}`}
+          />
           <ExportPDFButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}

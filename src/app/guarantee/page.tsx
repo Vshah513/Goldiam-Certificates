@@ -6,6 +6,7 @@ import FormPanel from "@/components/layout/FormPanel";
 import GuaranteeTemplate from "@/components/templates/GuaranteeTemplate";
 import PrintButton from "@/components/PrintButton";
 import ExportPDFButton from "@/components/ExportPDFButton";
+import SaveCertificateButton from "@/components/SaveCertificateButton";
 import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
@@ -71,6 +72,13 @@ export default function GuaranteePage() {
             &larr; Back
           </Link>
           <PrintButton contentRef={certificateRef} documentTitle={docTitle} />
+          <SaveCertificateButton
+            contentRef={certificateRef}
+            filename={`${docTitle}.pdf`}
+            certificateType="guarantee"
+            formData={data}
+            title={`Guarantee – ${data.clientName || "Draft"} – ${data.date}`}
+          />
           <ExportPDFButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}

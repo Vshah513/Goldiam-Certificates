@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useRef, useState, forwardRef } from "react";
+import Link from "next/link";
 
 interface FormPanelProps {
   formContent: ReactNode;
@@ -14,8 +15,16 @@ const FormPanel = forwardRef<HTMLDivElement, FormPanelProps>(
 
     return (
       <div className="min-h-screen flex flex-col">
-        {/* Mobile tab bar */}
-        <div className="lg:hidden no-print flex border-b border-dark/10 bg-white sticky top-0 z-20">
+        {/* Mobile tab bar: Back + Form | Preview */}
+        <div className="lg:hidden no-print flex items-stretch border-b border-dark/10 bg-white sticky top-0 z-20">
+          <Link
+            href="/"
+            className="flex items-center gap-1 px-4 py-3 text-sm font-bold text-dark border-r border-dark/10 shrink-0"
+            aria-label="Back to home"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back</span>
+          </Link>
           <button
             onClick={() => setActiveTab("form")}
             className={`flex-1 py-3 text-sm font-bold uppercase tracking-wide transition-colors ${

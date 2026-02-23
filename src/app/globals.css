@@ -19,6 +19,27 @@ body {
   color: var(--color-dark);
 }
 
+/* Mobile/tablet: let certificate grow with content so nothing overlaps or goes to 2 pages in preview */
+@media screen and (max-width: 1023px) {
+  .certificate-shell {
+    aspect-ratio: auto !important;
+    min-height: auto !important;
+  }
+  .certificate-shell .print-fit-content {
+    min-height: auto !important;
+    flex: 1 1 auto !important;
+  }
+  .certificate-shell table {
+    font-size: 0.7rem;
+    max-width: 100%;
+  }
+  .certificate-shell th,
+  .certificate-shell td {
+    padding: 0.25rem 0.35rem;
+    word-break: break-word;
+  }
+}
+
 @media print {
   body {
     background: white !important;

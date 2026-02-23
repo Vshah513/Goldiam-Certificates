@@ -14,11 +14,11 @@ export default function CertificateShell({
   return (
     <div className="certificate-shell bg-white relative" style={{ aspectRatio: "210 / 297" }}>
       {/* Outer border */}
-      <div className="absolute inset-0 border-2 border-gold-border" />
+      <div className="absolute inset-0 border-2 border-gold-border pointer-events-none" />
       {/* Inner border */}
-      <div className="absolute inset-[6px] border border-gold-border" />
+      <div className="absolute inset-[6px] border border-gold-border pointer-events-none" />
 
-      <div className="relative h-full flex flex-col p-8 sm:p-10 min-h-0">
+      <div className="relative h-full min-h-0 flex flex-col p-5 sm:p-8 lg:p-10">
         {/* Header */}
         <div className="text-center mb-6 print-fit-header shrink-0">
           <GoldiamLogo size="sm" />

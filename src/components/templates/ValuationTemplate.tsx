@@ -31,7 +31,7 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
       {/* Client intro */}
       <p className="mb-3 text-[13px] leading-relaxed">
         The following item(s) belonging to{" "}
-        <strong className="uppercase">
+        <strong className="font-calligraphy text-xl text-dark not-italic">
           {data.clientName || "________________"}
         </strong>{" "}
         have been examined and valued by us for insurance replacement purposes.
@@ -49,7 +49,7 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
       <div className="mb-3">
         <table className="w-full text-[12px] border-collapse">
           <thead>
-            <tr className="bg-dark text-white">
+            <tr className="border-b-2 border-dark bg-white text-dark">
               <th className="py-1.5 px-2 text-left font-semibold w-8">#</th>
               <th className="py-1.5 px-2 text-left font-semibold">
                 Description

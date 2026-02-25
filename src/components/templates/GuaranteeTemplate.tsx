@@ -23,7 +23,7 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
       {/* Client */}
       <p className="mb-2 text-[13px]">
         <span className="text-muted">Issued to: </span>
-        <strong className="uppercase">
+        <strong className="font-calligraphy text-lg text-dark not-italic">
           {data.clientName || "________________"}
         </strong>
       </p>

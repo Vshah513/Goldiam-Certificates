@@ -11,7 +11,7 @@ const sizes = {
   lg: { width: 260, height: 87 },
 };
 
-const LOGO_SRC = "/Goldiam%20Logo.jpeg";
+const LOGO_SRC = "/Goldiam%20Updated%20Logo.png";
 
 export default function GoldiamLogo({
   size = "md",

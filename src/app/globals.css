@@ -11,6 +11,12 @@
 
   --font-serif: var(--font-cormorant), "Cormorant Garamond", serif;
   --font-sans: var(--font-lato), "Lato", sans-serif;
+  --font-calligraphy: var(--font-calligraphy), "Italianno", cursive;
+}
+
+/* Calligraphy style for client/customer names on certificates */
+.font-calligraphy {
+  font-family: var(--font-calligraphy);
 }
 
 body {
@@ -110,5 +116,14 @@ body {
 @media print and (max-width: 768px) {
   html, body {
     overflow: hidden !important;
+  }
+}
+
+/* Gift voucher two-panel layout – print on one page */
+@media print {
+  .voucher-panel-layout {
+    min-height: 0 !important;
+    height: 297mm !important;
+    page-break-inside: avoid !important;
   }
 }

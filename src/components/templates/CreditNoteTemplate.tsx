@@ -84,7 +84,7 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
       <div className="my-4">
         <table className="w-full text-[12px] border-collapse">
           <thead>
-            <tr className="bg-dark text-white">
+            <tr className="border-b-2 border-dark bg-white text-dark">
               <th className="py-1.5 px-2 text-left font-semibold">
                 Description
               </th>

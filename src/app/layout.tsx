@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Lato } from "next/font/google";
+import { Cormorant_Garamond, Lato, Italianno } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -16,6 +16,13 @@ const lato = Lato({
   display: "swap",
 });
 
+const italianno = Italianno({
+  variable: "--font-calligraphy",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Goldiam Jewellers — Document Management",
   description:
@@ -29,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorant.variable} ${lato.variable} antialiased`}>
+      <body className={`${cormorant.variable} ${lato.variable} ${italianno.variable} antialiased`}>
         {children}
       </body>
     </html>

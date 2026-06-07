@@ -14,9 +14,12 @@
   --font-calligraphy: var(--font-calligraphy), "Italianno", cursive;
 }
 
-/* Calligraphy style for client/customer names on certificates */
+/* Calligraphy style for client/customer names on certificates.
+   word-spacing widens the (very narrow) script space so multi-word names like
+   "Viraj Shah" read as two words instead of running together. */
 .font-calligraphy {
   font-family: var(--font-calligraphy);
+  word-spacing: 0.3em;
 }
 
 body {

@@ -11,21 +11,22 @@ import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
-import { ValuationFormData, ValuationItem } from "@/types";
-import { METALS_FOR_VALUATION, METAL_COLOURS, DIAMOND_TYPES } from "@/lib/constants";
+import { ValuationFormData, ValuationItem, ValuationStone } from "@/types";
+import { METALS_FOR_VALUATION, METAL_COLOURS, STONE_TYPES } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
+
+function emptyValuationStone(): ValuationStone {
+  return { name: "", type: "", weight: 0, count: 0 };
+}
 
 function emptyItem(): ValuationItem {
   return {
     description: "",
-    stoneType: "",
-    stoneWeight: 0,
-    numberOfDiamonds: 0,
-    diamondType: "",
     metal: "",
     metalColour: "",
     valueKSH: 0,
+    stones: [emptyValuationStone()],
   };
 }
 
@@ -68,6 +69,46 @@ export default function ValuationPage() {
     setData((d) => ({
       ...d,
       items: d.items.filter((_, i) => i !== idx),
+    }));
+
+  const updateStone = (
+    itemIdx: number,
+    stoneIdx: number,
+    field: keyof ValuationStone,
+    value: string | number
+  ) =>
+    setData((d) => ({
+      ...d,
+      items: d.items.map((item, i) =>
+        i === itemIdx
+          ? {
+              ...item,
+              stones: item.stones.map((s, j) =>
+                j === stoneIdx ? { ...s, [field]: value } : s
+              ),
+            }
+          : item
+      ),
+    }));
+
+  const addStone = (itemIdx: number) =>
+    setData((d) => ({
+      ...d,
+      items: d.items.map((item, i) =>
+        i === itemIdx
+          ? { ...item, stones: [...item.stones, emptyValuationStone()] }
+          : item
+      ),
+    }));
+
+  const removeStone = (itemIdx: number, stoneIdx: number) =>
+    setData((d) => ({
+      ...d,
+      items: d.items.map((item, i) =>
+        i === itemIdx
+          ? { ...item, stones: item.stones.filter((_, j) => j !== stoneIdx) }
+          : item
+      ),
     }));
 
   const docTitle = `Goldiam_Valuation_${data.clientName || "Draft"}_${data.date}`;
@@ -158,40 +199,6 @@ export default function ValuationPage() {
                   rows={2}
                 />
                 <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    label="Stone Type"
-                    value={item.stoneType}
-                    onChange={(v) => updateItem(idx, "stoneType", v)}
-                    placeholder="e.g. Red Garnet"
-                  />
-                  <FormField
-                    label="Stone Weight"
-                    value={item.stoneWeight || ""}
-                    onChange={(v) =>
-                      updateItem(idx, "stoneWeight", parseFloat(v) || 0)
-                    }
-                    type="number"
-                    suffix="CT"
-                    step="0.01"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    label="No. of Diamonds"
-                    value={item.numberOfDiamonds || ""}
-                    onChange={(v) =>
-                      updateItem(idx, "numberOfDiamonds", parseInt(v) || 0)
-                    }
-                    type="number"
-                  />
-                  <SelectField
-                    label="Diamond Type"
-                    value={item.diamondType}
-                    onChange={(v) => updateItem(idx, "diamondType", v)}
-                    options={DIAMOND_TYPES}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
                   <SelectField
                     label="Metal"
                     value={item.metal}
@@ -204,6 +211,71 @@ export default function ValuationPage() {
                     onChange={(v) => updateItem(idx, "metalColour", v)}
                     options={METAL_COLOURS}
                   />
+                </div>
+                <div className="space-y-2 rounded-lg border border-dark/10 bg-ivory/40 p-3">
+                  <span className="text-xs font-bold uppercase tracking-wide text-dark/70">
+                    Stones
+                  </span>
+                  {item.stones.map((stone, sIdx) => (
+                    <div
+                      key={sIdx}
+                      className="space-y-2 rounded-md border border-dark/10 bg-white p-2.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-gold">
+                          Stone {sIdx + 1}
+                        </span>
+                        {item.stones.length > 1 && (
+                          <button
+                            onClick={() => removeStone(idx, sIdx)}
+                            className="text-[11px] text-red-500 transition-colors hover:text-red-700"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField
+                          label="Stone Name"
+                          value={stone.name}
+                          onChange={(v) => updateStone(idx, sIdx, "name", v)}
+                          placeholder="e.g. Tanzanite, Diamond"
+                        />
+                        <SelectField
+                          label="Type"
+                          value={stone.type}
+                          onChange={(v) => updateStone(idx, sIdx, "type", v)}
+                          options={STONE_TYPES}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField
+                          label="Weight"
+                          value={stone.weight || ""}
+                          onChange={(v) =>
+                            updateStone(idx, sIdx, "weight", parseFloat(v) || 0)
+                          }
+                          type="number"
+                          suffix="CT"
+                          step="0.01"
+                        />
+                        <FormField
+                          label="Count"
+                          value={stone.count || ""}
+                          onChange={(v) =>
+                            updateStone(idx, sIdx, "count", parseInt(v) || 0)
+                          }
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addStone(idx)}
+                    className="w-full rounded-md border-2 border-dashed border-gold/40 py-1.5 text-xs font-bold text-gold transition-colors hover:border-gold hover:bg-gold/5"
+                  >
+                    + Add Stone
+                  </button>
                 </div>
                 <FormField
                   label="Value"

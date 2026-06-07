@@ -59,6 +59,26 @@ function forceHexColorsOnClone(root: HTMLElement, clonedDoc: Document): void {
 }
 
 /**
+ * Wait for every <img> inside the capture target to finish loading/decoding before
+ * html2canvas snapshots it. Without this the logo (and any item photos) can be
+ * missing from the exported PDF because the canvas is drawn before images render.
+ */
+async function waitForImages(root: HTMLElement): Promise<void> {
+  const imgs = Array.from(root.querySelectorAll("img"));
+  await Promise.all(
+    imgs.map((img) => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise<void>((resolve) => {
+        img.addEventListener("load", () => resolve(), { once: true });
+        img.addEventListener("error", () => resolve(), { once: true });
+      });
+    })
+  );
+  // Let the browser paint the decoded images before capture.
+  await new Promise((r) => requestAnimationFrame(r));
+}
+
+/**
  * Export a certificate DOM element to PDF using html2pdf.js.
  * Forces hex colors in the clone so html2canvas doesn't fail on Tailwind v4 lab() colors.
  * If the element is hidden (e.g. on mobile when Form tab is active), clones it
@@ -87,6 +107,8 @@ export async function exportCertificateToPDF(
     target = wrap;
     await new Promise((r) => requestAnimationFrame(r));
   }
+
+  await waitForImages(target);
 
   try {
     await html2pdf()

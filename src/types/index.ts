@@ -1,12 +1,21 @@
+export interface ValuationStone {
+  name: string;
+  type: string;
+  weight: number;
+  count: number;
+}
+
 export interface ValuationItem {
   description: string;
-  stoneType: string;
-  stoneWeight: number;
-  numberOfDiamonds: number;
-  diamondType: string;
   metal: string;
   metalColour: string;
   valueKSH: number;
+  stones: ValuationStone[];
+  // Legacy single-stone fields — optional so previously-saved certificates still load.
+  stoneType?: string;
+  stoneWeight?: number;
+  numberOfDiamonds?: number;
+  diamondType?: string;
 }
 
 export interface ValuationFormData {
@@ -15,6 +24,16 @@ export interface ValuationFormData {
   certificateNumber: string;
   items: ValuationItem[];
   valuerName: string;
+}
+
+export interface Stone {
+  stoneName: string;
+  stoneType: string;
+  stoneWeight: number;
+  stoneShape: string;
+  numberOfStones: number;
+  stoneColour: string;
+  stoneClarity: string;
 }
 
 export interface GuaranteeFormData {
@@ -27,13 +46,15 @@ export interface GuaranteeFormData {
   goldPurity: string;
   totalMetalWeight: number;
   hasStones: boolean;
-  stoneName: string;
-  stoneType: string;
-  stoneWeight: number;
-  stoneShape: string;
-  numberOfStones: number;
-  stoneColour: string;
-  stoneClarity: string;
+  stones: Stone[];
+  // Legacy single-stone fields — optional so previously-saved certificates still load.
+  stoneName?: string;
+  stoneType?: string;
+  stoneWeight?: number;
+  stoneShape?: string;
+  numberOfStones?: number;
+  stoneColour?: string;
+  stoneClarity?: string;
   additionalNotes: string;
 }
 

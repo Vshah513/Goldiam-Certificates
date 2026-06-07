@@ -12,7 +12,7 @@ import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
 import ToggleField from "@/components/ui/ToggleField";
-import { GuaranteeFormData } from "@/types";
+import { GuaranteeFormData, Stone } from "@/types";
 import {
   METAL_TYPES,
   METAL_COLOURS,
@@ -23,6 +23,18 @@ import {
 } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
+
+function emptyStone(): Stone {
+  return {
+    stoneName: "",
+    stoneType: "",
+    stoneWeight: 0,
+    stoneShape: "",
+    numberOfStones: 0,
+    stoneColour: "",
+    stoneClarity: "",
+  };
+}
 
 export default function GuaranteePage() {
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -36,13 +48,7 @@ export default function GuaranteePage() {
     goldPurity: "",
     totalMetalWeight: 0,
     hasStones: false,
-    stoneName: "",
-    stoneType: "",
-    stoneWeight: 0,
-    stoneShape: "",
-    numberOfStones: 0,
-    stoneColour: "",
-    stoneClarity: "",
+    stones: [emptyStone()],
     additionalNotes: "",
   });
 
@@ -57,6 +63,32 @@ export default function GuaranteePage() {
     field: K,
     value: GuaranteeFormData[K]
   ) => setData((d) => ({ ...d, [field]: value }));
+
+  const updateStone = (
+    idx: number,
+    field: keyof Stone,
+    value: string | number
+  ) =>
+    setData((d) => ({
+      ...d,
+      stones: d.stones.map((s, i) => (i === idx ? { ...s, [field]: value } : s)),
+    }));
+
+  const addStone = () =>
+    setData((d) => ({ ...d, stones: [...d.stones, emptyStone()] }));
+
+  const removeStone = (idx: number) =>
+    setData((d) => ({
+      ...d,
+      stones: d.stones.filter((_, i) => i !== idx),
+    }));
+
+  const toggleStones = (v: boolean) =>
+    setData((d) => ({
+      ...d,
+      hasStones: v,
+      stones: v && d.stones.length === 0 ? [emptyStone()] : d.stones,
+    }));
 
   const docTitle = `Goldiam_Guarantee_${data.clientName || "Draft"}_${data.date}`;
 
@@ -164,65 +196,91 @@ export default function GuaranteePage() {
             <ToggleField
               label="Has Stones?"
               checked={data.hasStones}
-              onChange={(v) => update("hasStones", v)}
+              onChange={toggleStones}
             />
             {data.hasStones && (
-              <>
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    label="Stone Name"
-                    value={data.stoneName}
-                    onChange={(v) => update("stoneName", v)}
-                    placeholder="e.g. Diamond, Ruby"
-                  />
-                  <SelectField
-                    label="Stone Type"
-                    value={data.stoneType}
-                    onChange={(v) => update("stoneType", v)}
-                    options={STONE_TYPES}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    label="Stone Weight"
-                    value={data.stoneWeight || ""}
-                    onChange={(v) =>
-                      update("stoneWeight", parseFloat(v) || 0)
-                    }
-                    type="number"
-                    suffix="CT"
-                    step="0.01"
-                  />
-                  <SelectField
-                    label="Stone Shape"
-                    value={data.stoneShape}
-                    onChange={(v) => update("stoneShape", v)}
-                    options={STONE_SHAPES}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    label="Number of Stones"
-                    value={data.numberOfStones || ""}
-                    onChange={(v) =>
-                      update("numberOfStones", parseInt(v) || 0)
-                    }
-                    type="number"
-                  />
-                  <FormField
-                    label="Stone Colour"
-                    value={data.stoneColour}
-                    onChange={(v) => update("stoneColour", v)}
-                    placeholder="e.g. D-F, Red"
-                  />
-                </div>
-                <SelectField
-                  label="Stone Clarity"
-                  value={data.stoneClarity}
-                  onChange={(v) => update("stoneClarity", v)}
-                  options={STONE_CLARITIES}
-                />
-              </>
+              <div className="space-y-3">
+                {data.stones.map((stone, idx) => (
+                  <div
+                    key={idx}
+                    className="space-y-3 rounded-lg border border-dark/10 bg-ivory/40 p-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-gold">
+                        Stone {idx + 1}
+                      </span>
+                      {data.stones.length > 1 && (
+                        <button
+                          onClick={() => removeStone(idx)}
+                          className="text-xs text-red-500 transition-colors hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        label="Stone Name"
+                        value={stone.stoneName}
+                        onChange={(v) => updateStone(idx, "stoneName", v)}
+                        placeholder="e.g. Diamond, Tanzanite"
+                      />
+                      <SelectField
+                        label="Stone Type"
+                        value={stone.stoneType}
+                        onChange={(v) => updateStone(idx, "stoneType", v)}
+                        options={STONE_TYPES}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        label="Stone Weight"
+                        value={stone.stoneWeight || ""}
+                        onChange={(v) =>
+                          updateStone(idx, "stoneWeight", parseFloat(v) || 0)
+                        }
+                        type="number"
+                        suffix="CT"
+                        step="0.01"
+                      />
+                      <SelectField
+                        label="Stone Shape"
+                        value={stone.stoneShape}
+                        onChange={(v) => updateStone(idx, "stoneShape", v)}
+                        options={STONE_SHAPES}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        label="Number of Stones"
+                        value={stone.numberOfStones || ""}
+                        onChange={(v) =>
+                          updateStone(idx, "numberOfStones", parseInt(v) || 0)
+                        }
+                        type="number"
+                      />
+                      <FormField
+                        label="Stone Colour"
+                        value={stone.stoneColour}
+                        onChange={(v) => updateStone(idx, "stoneColour", v)}
+                        placeholder="e.g. D-F, Red"
+                      />
+                    </div>
+                    <SelectField
+                      label="Stone Clarity"
+                      value={stone.stoneClarity}
+                      onChange={(v) => updateStone(idx, "stoneClarity", v)}
+                      options={STONE_CLARITIES}
+                    />
+                  </div>
+                ))}
+                <button
+                  onClick={addStone}
+                  className="w-full rounded-lg border-2 border-dashed border-gold/40 py-2 text-sm font-bold text-gold transition-colors hover:border-gold hover:bg-gold/5"
+                >
+                  + Add Another Stone
+                </button>
+              </div>
             )}
           </div>
 

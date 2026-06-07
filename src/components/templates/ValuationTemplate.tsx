@@ -1,5 +1,5 @@
 import CertificateShell from "@/components/layout/CertificateShell";
-import { ValuationFormData } from "@/types";
+import { ValuationFormData, ValuationItem, ValuationStone } from "@/types";
 import { formatKSH, formatDate } from "@/lib/formatters";
 import { amountToWords } from "@/lib/numberToWords";
 
@@ -65,14 +65,10 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
               if (item.description) descParts.push(item.description);
               if (item.metal) descParts.push(item.metal);
               if (item.metalColour) descParts.push(`${item.metalColour} Gold`);
-              if (item.stoneType && item.stoneWeight)
-                descParts.push(
-                  `${item.stoneType} (${item.stoneWeight} CT)`
-                );
-              if (item.numberOfDiamonds > 0)
-                descParts.push(
-                  `${item.numberOfDiamonds} ${item.diamondType || ""} Diamond${item.numberOfDiamonds > 1 ? "s" : ""}`
-                );
+              for (const stone of itemStones(item)) {
+                const stoneStr = formatStone(stone);
+                if (stoneStr) descParts.push(stoneStr);
+              }
 
               const description = descParts.join(" — ") || "—";
 
@@ -120,4 +116,36 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
       </div>
     </CertificateShell>
   );
+}
+
+/** Stones for an item — prefers the new array, falls back to legacy flat fields. */
+function itemStones(item: ValuationItem): ValuationStone[] {
+  if (item.stones && item.stones.length > 0) return item.stones;
+  const legacy: ValuationStone[] = [];
+  if (item.stoneType || item.stoneWeight)
+    legacy.push({
+      name: item.stoneType ?? "",
+      type: "",
+      weight: item.stoneWeight ?? 0,
+      count: 0,
+    });
+  if (item.numberOfDiamonds && item.numberOfDiamonds > 0)
+    legacy.push({
+      name: "Diamond",
+      type: item.diamondType ?? "",
+      weight: 0,
+      count: item.numberOfDiamonds,
+    });
+  return legacy;
+}
+
+/** One-line description of a stone, e.g. "6× Diamond 0.50 CT (Natural)". */
+function formatStone(stone: ValuationStone): string {
+  const parts: string[] = [];
+  if (stone.count) parts.push(`${stone.count}×`);
+  if (stone.name) parts.push(stone.name);
+  if (stone.weight) parts.push(`${stone.weight} CT`);
+  const base = parts.join(" ");
+  if (!base) return stone.type || "";
+  return stone.type ? `${base} (${stone.type})` : base;
 }

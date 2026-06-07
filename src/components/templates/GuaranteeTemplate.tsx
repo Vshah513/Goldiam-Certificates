@@ -1,5 +1,5 @@
 import CertificateShell from "@/components/layout/CertificateShell";
-import { GuaranteeFormData } from "@/types";
+import { GuaranteeFormData, Stone } from "@/types";
 import { formatDate } from "@/lib/formatters";
 
 interface GuaranteeTemplateProps {
@@ -7,6 +7,9 @@ interface GuaranteeTemplateProps {
 }
 
 export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
+  const stones = getStones(data);
+  const showStones = data.hasStones && stones.length > 0;
+
   return (
     <CertificateShell title="Certificate of Guarantee">
       {/* Date & Cert number */}
@@ -60,28 +63,45 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
       </div>
 
       {/* Stone details */}
-      {data.hasStones && (
+      {showStones && (
         <div className="mb-4">
           <h3 className="font-serif text-sm font-semibold uppercase tracking-wide text-gold mb-2">
             Stone Details
           </h3>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[12px]">
-            <DetailRow label="Stone" value={data.stoneName} />
-            <DetailRow label="Type" value={data.stoneType} />
-            <DetailRow
-              label="Weight"
-              value={data.stoneWeight ? `${data.stoneWeight} CT` : ""}
-            />
-            <DetailRow label="Shape" value={data.stoneShape} />
-            <DetailRow
-              label="Number of Stones"
-              value={
-                data.numberOfStones ? String(data.numberOfStones) : ""
-              }
-            />
-            <DetailRow label="Colour" value={data.stoneColour} />
-            <DetailRow label="Clarity" value={data.stoneClarity} />
-          </div>
+          <table className="w-full text-[11px] border-collapse">
+            <thead>
+              <tr className="border-b-2 border-dark text-dark">
+                <th className="py-1 px-1.5 text-left font-semibold w-6">#</th>
+                <th className="py-1 px-1.5 text-left font-semibold">Stone</th>
+                <th className="py-1 px-1.5 text-left font-semibold">Type</th>
+                <th className="py-1 px-1.5 text-right font-semibold">Wt (CT)</th>
+                <th className="py-1 px-1.5 text-left font-semibold">Shape</th>
+                <th className="py-1 px-1.5 text-right font-semibold">No.</th>
+                <th className="py-1 px-1.5 text-left font-semibold">Colour</th>
+                <th className="py-1 px-1.5 text-left font-semibold">Clarity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stones.map((stone, idx) => (
+                <tr key={idx} className="border-b border-dark/10">
+                  <td className="py-1.5 px-1.5 text-muted">{idx + 1}</td>
+                  <td className="py-1.5 px-1.5 font-medium">
+                    {stone.stoneName || "—"}
+                  </td>
+                  <td className="py-1.5 px-1.5">{stone.stoneType || "—"}</td>
+                  <td className="py-1.5 px-1.5 text-right">
+                    {stone.stoneWeight ? stone.stoneWeight : "—"}
+                  </td>
+                  <td className="py-1.5 px-1.5">{stone.stoneShape || "—"}</td>
+                  <td className="py-1.5 px-1.5 text-right">
+                    {stone.numberOfStones ? stone.numberOfStones : "—"}
+                  </td>
+                  <td className="py-1.5 px-1.5">{stone.stoneColour || "—"}</td>
+                  <td className="py-1.5 px-1.5">{stone.stoneClarity || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -123,4 +143,27 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       <span className="font-medium">{value || "—"}</span>
     </div>
   );
+}
+
+/**
+ * Returns the stones to render. Prefers the new `stones` array; falls back to the
+ * legacy single-stone fields so certificates saved before multi-stone support
+ * still display correctly.
+ */
+function getStones(data: GuaranteeFormData): Stone[] {
+  if (data.stones && data.stones.length > 0) return data.stones;
+  if (data.stoneName || data.stoneType || data.stoneWeight) {
+    return [
+      {
+        stoneName: data.stoneName ?? "",
+        stoneType: data.stoneType ?? "",
+        stoneWeight: data.stoneWeight ?? 0,
+        stoneShape: data.stoneShape ?? "",
+        numberOfStones: data.numberOfStones ?? 0,
+        stoneColour: data.stoneColour ?? "",
+        stoneClarity: data.stoneClarity ?? "",
+      },
+    ];
+  }
+  return [];
 }

@@ -51,4 +51,4 @@ export const METALS_FOR_VALUATION = [
 export const GOLDIAM_ADDRESS =
   "1st Floor, Yaya Centre, Argwings Kodhek Road, Kilimani, Nairobi, Kenya.";
 export const GOLDIAM_PHONE = "+254 110 919425";
-export const GOLDIAM_EMAIL = "info@goldiam.co.ke";
+export const GOLDIAM_EMAIL = "goldiam@magicafrica.com";

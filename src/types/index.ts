@@ -3,12 +3,17 @@ export interface ValuationStone {
   type: string;
   weight: number;
   count: number;
+  shape: string;
+  colour: string;
+  clarity: string;
 }
 
 export interface ValuationItem {
   description: string;
   metal: string;
   metalColour: string;
+  metalWeight: number;
+  hasStones: boolean;
   valueKSH: number;
   stones: ValuationStone[];
   // Legacy single-stone fields — optional so previously-saved certificates still load.

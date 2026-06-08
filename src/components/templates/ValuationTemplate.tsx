@@ -65,9 +65,14 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
               if (item.description) descParts.push(item.description);
               if (item.metal) descParts.push(item.metal);
               if (item.metalColour) descParts.push(`${item.metalColour} Gold`);
-              for (const stone of itemStones(item)) {
-                const stoneStr = formatStone(stone);
-                if (stoneStr) descParts.push(stoneStr);
+              if (item.metalWeight) descParts.push(`${item.metalWeight}g`);
+              const stones = itemStones(item);
+              const showStones = item.hasStones ?? stones.length > 0;
+              if (showStones) {
+                for (const stone of stones) {
+                  const stoneStr = formatStone(stone);
+                  if (stoneStr) descParts.push(stoneStr);
+                }
               }
 
               const description = descParts.join(" — ") || "—";
@@ -128,6 +133,9 @@ function itemStones(item: ValuationItem): ValuationStone[] {
       type: "",
       weight: item.stoneWeight ?? 0,
       count: 0,
+      shape: "",
+      colour: "",
+      clarity: "",
     });
   if (item.numberOfDiamonds && item.numberOfDiamonds > 0)
     legacy.push({
@@ -135,16 +143,22 @@ function itemStones(item: ValuationItem): ValuationStone[] {
       type: item.diamondType ?? "",
       weight: 0,
       count: item.numberOfDiamonds,
+      shape: "",
+      colour: "",
+      clarity: "",
     });
   return legacy;
 }
 
-/** One-line description of a stone, e.g. "6× Diamond 0.50 CT (Natural)". */
+/** One-line description of a stone, e.g. "6× Diamond 0.50 CT Round Brilliant D-F VS1 (Natural)". */
 function formatStone(stone: ValuationStone): string {
   const parts: string[] = [];
   if (stone.count) parts.push(`${stone.count}×`);
   if (stone.name) parts.push(stone.name);
   if (stone.weight) parts.push(`${stone.weight} CT`);
+  if (stone.shape) parts.push(stone.shape);
+  if (stone.colour) parts.push(stone.colour);
+  if (stone.clarity) parts.push(stone.clarity);
   const base = parts.join(" ");
   if (!base) return stone.type || "";
   return stone.type ? `${base} (${stone.type})` : base;

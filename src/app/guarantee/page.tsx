@@ -12,6 +12,7 @@ import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
 import ToggleField from "@/components/ui/ToggleField";
+import ClarityField from "@/components/ui/ClarityField";
 import { GuaranteeFormData, Stone } from "@/types";
 import {
   METAL_TYPES,
@@ -19,7 +20,6 @@ import {
   GOLD_KARATS,
   STONE_TYPES,
   STONE_SHAPES,
-  STONE_CLARITIES,
 } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
@@ -266,11 +266,10 @@ export default function GuaranteePage() {
                         placeholder="e.g. D-F, Red"
                       />
                     </div>
-                    <SelectField
+                    <ClarityField
                       label="Stone Clarity"
                       value={stone.stoneClarity}
                       onChange={(v) => updateStone(idx, "stoneClarity", v)}
-                      options={STONE_CLARITIES}
                     />
                   </div>
                 ))}

@@ -15,6 +15,7 @@ const VOUCHER_BG = "/voucher-design.jpg";
 const GOLD = "#C9A24B"; // small caps labels
 const CREAM = "#F2E7C8"; // recipient name / message
 const CREAM_SOFT = "#E2D7B4"; // occasion / secondary
+const MESSAGE = "#FFFFFF"; // personal message — pure white for max contrast on the art
 const VALUE_INK = "#2A2206"; // amount, sits on the parchment value box
 const FILL_GOLD = "#E7D295"; // voucher id / valid-until values on dark
 
@@ -116,12 +117,13 @@ export default function VoucherTemplate({ data }: VoucherTemplateProps) {
           className="absolute text-center font-serif"
           style={{
             left: "57%",
-            top: "59.5%",
+            top: "58.5%",
             width: "38%",
-            color: CREAM_SOFT,
-            fontSize: "1.7cqw",
+            color: MESSAGE,
+            fontSize: "2.2cqw",
             fontStyle: "italic",
             lineHeight: 1.25,
+            textShadow: "0 0.15cqw 0.45cqw rgba(0,0,0,0.85)",
           }}
         >
           {data.personalMessage}

@@ -122,11 +122,11 @@ body {
   }
 }
 
-/* Gift voucher two-panel layout – print on one page */
+/* Gift voucher – landscape artwork printed full-bleed on one page */
 @media print {
-  .voucher-panel-layout {
-    min-height: 0 !important;
-    height: 297mm !important;
+  .voucher-card {
+    width: 100% !important;
+    box-shadow: none !important;
     page-break-inside: avoid !important;
   }
 }

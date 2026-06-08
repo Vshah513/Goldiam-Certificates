@@ -40,7 +40,11 @@ function CertificateView({ cert }: { cert: SavedCertificate }) {
     if (!contentRef.current) return;
     const filename = `${cert.title.replace(/\s+/g, "_")}.pdf`;
     const { exportCertificateToPDF } = await import("@/lib/exportCertificatePDF");
-    await exportCertificateToPDF(contentRef.current, filename);
+    await exportCertificateToPDF(
+      contentRef.current,
+      filename,
+      cert.type === "voucher" ? "landscape" : "portrait"
+    );
   };
 
   const handleDelete = () => {

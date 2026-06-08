@@ -55,6 +55,9 @@ export default function VoucherPage() {
 
   const docTitle = `Goldiam_Voucher_${data.recipientName || "Draft"}_${data.issueDate}`;
 
+  // The voucher artwork is landscape (3:2) — print/export it on a landscape page.
+  const voucherPageStyle = `@page { size: A4 landscape; margin: 0; } [class*="max-w-"] { max-width: none !important; }`;
+
   return (
     <FormPanel
       ref={certificateRef}
@@ -66,17 +69,23 @@ export default function VoucherPage() {
           >
             &larr; Back
           </Link>
-          <PrintButton contentRef={certificateRef} documentTitle={docTitle} />
+          <PrintButton
+            contentRef={certificateRef}
+            documentTitle={docTitle}
+            pageStyle={voucherPageStyle}
+          />
           <SaveCertificateButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}
             certificateType="voucher"
             formData={data}
             title={`Voucher – ${data.recipientName || "Draft"} – ${data.issueDate}`}
+            orientation="landscape"
           />
           <ExportPDFButton
             contentRef={certificateRef}
             filename={`${docTitle}.pdf`}
+            orientation="landscape"
           />
         </>
       }

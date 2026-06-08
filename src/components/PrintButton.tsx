@@ -8,11 +8,14 @@ import { RefObject } from "react";
 interface PrintButtonProps {
   contentRef: RefObject<HTMLDivElement | null>;
   documentTitle?: string;
+  /** Extra @page / print CSS, e.g. landscape for the gift voucher. */
+  pageStyle?: string;
 }
 
 export default function PrintButton({
   contentRef,
   documentTitle = "Goldiam Document",
+  pageStyle,
 }: PrintButtonProps) {
   const [showDoneDialog, setShowDoneDialog] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -21,6 +24,7 @@ export default function PrintButton({
   const handlePrint = useReactToPrint({
     contentRef,
     documentTitle,
+    pageStyle,
     onAfterPrint: () => setShowDoneDialog(true),
   });
 

@@ -7,11 +7,13 @@ import { exportCertificateToPDF } from "@/lib/exportCertificatePDF";
 interface ExportPDFButtonProps {
   contentRef: RefObject<HTMLDivElement | null>;
   filename?: string;
+  orientation?: "portrait" | "landscape";
 }
 
 export default function ExportPDFButton({
   contentRef,
   filename = "Goldiam_Document.pdf",
+  orientation = "portrait",
 }: ExportPDFButtonProps) {
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +25,7 @@ export default function ExportPDFButton({
     }
     setError(null);
     try {
-      await exportCertificateToPDF(contentRef.current, filename);
+      await exportCertificateToPDF(contentRef.current, filename, orientation);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to generate PDF";

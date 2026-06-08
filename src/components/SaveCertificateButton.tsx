@@ -14,6 +14,7 @@ interface SaveCertificateButtonProps {
   certificateType: CertificateType;
   formData: object;
   title: string;
+  orientation?: "portrait" | "landscape";
 }
 
 export default function SaveCertificateButton({
@@ -22,6 +23,7 @@ export default function SaveCertificateButton({
   certificateType,
   formData,
   title,
+  orientation = "portrait",
 }: SaveCertificateButtonProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -36,7 +38,7 @@ export default function SaveCertificateButton({
     setSaved(false);
     setError(null);
     try {
-      await exportCertificateToPDF(contentRef.current, filename);
+      await exportCertificateToPDF(contentRef.current, filename, orientation);
       saveCertificate(certificateType, formData, title);
       dispatchSavedEvent();
       setSaved(true);

@@ -86,7 +86,8 @@ async function waitForImages(root: HTMLElement): Promise<void> {
  */
 export async function exportCertificateToPDF(
   element: HTMLDivElement,
-  filename: string
+  filename: string,
+  orientation: "portrait" | "landscape" = "portrait"
 ): Promise<void> {
   const html2pdf = (await import("html2pdf.js")).default;
 
@@ -125,7 +126,7 @@ export async function exportCertificateToPDF(
             forceHexColorsOnClone(clonedElement, clonedDoc);
           },
         },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        jsPDF: { unit: "mm", format: "a4", orientation },
       })
       .from(target)
       .save();

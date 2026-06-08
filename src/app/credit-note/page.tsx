@@ -12,6 +12,7 @@ import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
 import ToggleField from "@/components/ui/ToggleField";
+import RangeField from "@/components/ui/RangeField";
 import { CreditNoteFormData } from "@/types";
 import { CREDIT_REASONS, VALIDITY_OPTIONS } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
@@ -172,6 +173,17 @@ export default function CreditNotePage() {
               checked={data.showSignature ?? false}
               onChange={(v) => update("showSignature", v)}
             />
+            {data.showSignature && (
+              <RangeField
+                label="Signature Size"
+                value={data.signatureScale ?? 100}
+                onChange={(v) => update("signatureScale", v)}
+                min={50}
+                max={250}
+                step={5}
+                valueLabel={`${data.signatureScale ?? 100}%`}
+              />
+            )}
           </div>
         </>
       }

@@ -114,6 +114,7 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
       <div className="mt-auto pt-6">
         <SignatureBlock
           showSignature={data.showSignature}
+          signatureScale={data.signatureScale}
           label="Authorised Valuer"
           name={data.valuerName || "Goldiam Jewellers"}
         />

@@ -129,6 +129,7 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
       <div className="pt-4">
         <SignatureBlock
           showSignature={data.showSignature}
+          signatureScale={data.signatureScale}
           label="Authorised Signatory"
           name="Goldiam Jewellers"
         />

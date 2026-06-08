@@ -12,6 +12,7 @@ import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
 import ToggleField from "@/components/ui/ToggleField";
+import RangeField from "@/components/ui/RangeField";
 import ClarityField from "@/components/ui/ClarityField";
 import { ValuationFormData, ValuationItem, ValuationStone } from "@/types";
 import {
@@ -66,7 +67,7 @@ export default function ValuationPage() {
 
   const update = (
     field: keyof ValuationFormData,
-    value: string | boolean
+    value: string | boolean | number
   ) => setData((d) => ({ ...d, [field]: value }));
 
   const updateItem = (
@@ -380,6 +381,17 @@ export default function ValuationPage() {
               checked={data.showSignature ?? false}
               onChange={(v) => update("showSignature", v)}
             />
+            {data.showSignature && (
+              <RangeField
+                label="Signature Size"
+                value={data.signatureScale ?? 100}
+                onChange={(v) => update("signatureScale", v)}
+                min={50}
+                max={250}
+                step={5}
+                valueLabel={`${data.signatureScale ?? 100}%`}
+              />
+            )}
           </div>
         </>
       }

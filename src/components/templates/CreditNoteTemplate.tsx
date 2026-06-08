@@ -153,6 +153,7 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
       <div className="flex justify-between items-end pt-4">
         <SignatureBlock
           showSignature={data.showSignature}
+          signatureScale={data.signatureScale}
           label="Authorised Signatory"
           name={data.issuedBy || "Goldiam Jewellers"}
           widthClassName="w-44"

@@ -30,6 +30,7 @@ export interface ValuationFormData {
   items: ValuationItem[];
   valuerName: string;
   showSignature?: boolean;
+  signatureScale?: number;
 }
 
 export interface Stone {
@@ -63,6 +64,7 @@ export interface GuaranteeFormData {
   stoneClarity?: string;
   additionalNotes: string;
   showSignature?: boolean;
+  signatureScale?: number;
 }
 
 export interface VoucherFormData {
@@ -90,4 +92,5 @@ export interface CreditNoteFormData {
   customExpiry: string;
   issuedBy: string;
   showSignature?: boolean;
+  signatureScale?: number;
 }

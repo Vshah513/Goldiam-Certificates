@@ -1,4 +1,5 @@
 import CertificateShell from "@/components/layout/CertificateShell";
+import SignatureBlock from "@/components/templates/SignatureBlock";
 import { ValuationFormData, ValuationItem, ValuationStone } from "@/types";
 import { formatKSH, formatDate } from "@/lib/formatters";
 import { amountToWords } from "@/lib/numberToWords";
@@ -111,13 +112,11 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
 
       {/* Signature */}
       <div className="mt-auto pt-6">
-        <div className="w-48">
-          <div className="border-b border-dark/30 mb-1 h-8" />
-          <div className="text-[11px] text-muted">Authorised Valuer</div>
-          <div className="text-[12px] font-semibold">
-            {data.valuerName || "Goldiam Jewellers"}
-          </div>
-        </div>
+        <SignatureBlock
+          showSignature={data.showSignature}
+          label="Authorised Valuer"
+          name={data.valuerName || "Goldiam Jewellers"}
+        />
       </div>
     </CertificateShell>
   );

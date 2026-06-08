@@ -1,4 +1,5 @@
 import CertificateShell from "@/components/layout/CertificateShell";
+import SignatureBlock from "@/components/templates/SignatureBlock";
 import { GuaranteeFormData, Stone } from "@/types";
 import { formatDate } from "@/lib/formatters";
 
@@ -126,11 +127,11 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
 
       {/* Signature */}
       <div className="pt-4">
-        <div className="w-48">
-          <div className="border-b border-dark/30 mb-1 h-8" />
-          <div className="text-[11px] text-muted">Authorised Signatory</div>
-          <div className="text-[12px] font-semibold">Goldiam Jewellers</div>
-        </div>
+        <SignatureBlock
+          showSignature={data.showSignature}
+          label="Authorised Signatory"
+          name="Goldiam Jewellers"
+        />
       </div>
     </CertificateShell>
   );

@@ -284,13 +284,18 @@ export default function GuaranteePage() {
           </div>
 
           {/* Notes */}
-          <div className="p-4 bg-white rounded-lg border border-dark/10">
+          <div className="space-y-3 p-4 bg-white rounded-lg border border-dark/10">
             <TextAreaField
               label="Additional Notes"
               value={data.additionalNotes}
               onChange={(v) => update("additionalNotes", v)}
               placeholder="Any additional information..."
               rows={3}
+            />
+            <ToggleField
+              label="Add Signature"
+              checked={data.showSignature ?? false}
+              onChange={(v) => update("showSignature", v)}
             />
           </div>
         </>

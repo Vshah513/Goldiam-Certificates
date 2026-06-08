@@ -1,4 +1,5 @@
 import CertificateShell from "@/components/layout/CertificateShell";
+import SignatureBlock from "@/components/templates/SignatureBlock";
 import { CreditNoteFormData } from "@/types";
 import {
   formatKSH,
@@ -150,13 +151,12 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
 
       {/* Signature */}
       <div className="flex justify-between items-end pt-4">
-        <div className="w-44">
-          <div className="border-b border-dark/30 mb-1 h-8" />
-          <div className="text-[11px] text-muted">Authorised Signatory</div>
-          <div className="text-[12px] font-semibold">
-            {data.issuedBy || "Goldiam Jewellers"}
-          </div>
-        </div>
+        <SignatureBlock
+          showSignature={data.showSignature}
+          label="Authorised Signatory"
+          name={data.issuedBy || "Goldiam Jewellers"}
+          widthClassName="w-44"
+        />
       </div>
     </CertificateShell>
   );

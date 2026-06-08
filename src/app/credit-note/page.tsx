@@ -11,6 +11,7 @@ import FormField from "@/components/ui/FormField";
 import SelectField from "@/components/ui/SelectField";
 import TextAreaField from "@/components/ui/TextAreaField";
 import DateField from "@/components/ui/DateField";
+import ToggleField from "@/components/ui/ToggleField";
 import { CreditNoteFormData } from "@/types";
 import { CREDIT_REASONS, VALIDITY_OPTIONS } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
@@ -41,8 +42,10 @@ export default function CreditNotePage() {
     }));
   }, []);
 
-  const update = (field: keyof CreditNoteFormData, value: string | number) =>
-    setData((d) => ({ ...d, [field]: value }));
+  const update = (
+    field: keyof CreditNoteFormData,
+    value: string | number | boolean
+  ) => setData((d) => ({ ...d, [field]: value }));
 
   const docTitle = `Goldiam_CreditNote_${data.clientName || "Draft"}_${data.dateIssued}`;
 
@@ -163,6 +166,11 @@ export default function CreditNotePage() {
               value={data.issuedBy}
               onChange={(v) => update("issuedBy", v)}
               placeholder="Staff name"
+            />
+            <ToggleField
+              label="Add Signature"
+              checked={data.showSignature ?? false}
+              onChange={(v) => update("showSignature", v)}
             />
           </div>
         </>

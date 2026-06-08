@@ -64,8 +64,10 @@ export default function ValuationPage() {
     }));
   }, []);
 
-  const update = (field: keyof ValuationFormData, value: string) =>
-    setData((d) => ({ ...d, [field]: value }));
+  const update = (
+    field: keyof ValuationFormData,
+    value: string | boolean
+  ) => setData((d) => ({ ...d, [field]: value }));
 
   const updateItem = (
     idx: number,
@@ -366,12 +368,17 @@ export default function ValuationPage() {
           </div>
 
           {/* Valuer */}
-          <div className="p-4 bg-white rounded-lg border border-dark/10">
+          <div className="space-y-3 p-4 bg-white rounded-lg border border-dark/10">
             <FormField
               label="Valuer Name"
               value={data.valuerName}
               onChange={(v) => update("valuerName", v)}
               placeholder="Goldiam Jewellers"
+            />
+            <ToggleField
+              label="Add Signature"
+              checked={data.showSignature ?? false}
+              onChange={(v) => update("showSignature", v)}
             />
           </div>
         </>

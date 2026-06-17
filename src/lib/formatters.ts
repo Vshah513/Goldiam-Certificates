@@ -4,6 +4,26 @@ export function formatKSH(amount: number): string {
   return `KSH ${new Intl.NumberFormat("en-KE").format(amount)}`;
 }
 
+export function resolveCurrency(
+  currency?: string,
+  customCurrency?: string,
+  fallback = "KSH"
+): string {
+  if (currency === "Other") {
+    return customCurrency?.trim() || "CUR";
+  }
+  return currency?.trim() || fallback;
+}
+
+export function formatCurrency(
+  amount: number,
+  currency?: string,
+  customCurrency?: string
+): string {
+  const activeCurrency = resolveCurrency(currency, customCurrency);
+  return `${activeCurrency} ${new Intl.NumberFormat("en-KE").format(amount)}`;
+}
+
 export function formatDate(date: string | Date): string {
   const d = typeof date === "string" ? new Date(date + "T00:00:00") : date;
   const day = d.getDate();

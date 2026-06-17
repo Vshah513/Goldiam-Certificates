@@ -6,6 +6,8 @@ export interface ValuationStone {
   shape: string;
   colour: string;
   clarity: string;
+  /** Stone is set in the piece and can't be weighed, so the carat is an estimate. */
+  approxWeight?: boolean;
 }
 
 export interface ValuationItem {
@@ -27,6 +29,8 @@ export interface ValuationFormData {
   clientName: string;
   date: string;
   certificateNumber: string;
+  currency: string;
+  customCurrency: string;
   items: ValuationItem[];
   valuerName: string;
   showSignature?: boolean;
@@ -71,6 +75,8 @@ export interface VoucherFormData {
   recipientName: string;
   occasion: string;
   amountKSH: number;
+  currency: string;
+  customCurrency: string;
   issuedBy: string;
   issueDate: string;
   validityPeriod: string;
@@ -88,6 +94,8 @@ export interface CreditNoteFormData {
   reason: string;
   reasonDetails: string;
   creditAmountKSH: number;
+  currency: string;
+  customCurrency: string;
   validityPeriod: string;
   customExpiry: string;
   issuedBy: string;

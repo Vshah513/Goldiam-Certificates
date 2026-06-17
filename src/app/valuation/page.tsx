@@ -24,6 +24,8 @@ import {
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
 
+const CURRENCY_OPTIONS = ["KSH", "USD", "Other"] as const;
+
 function emptyValuationStone(): ValuationStone {
   return {
     name: "",
@@ -33,6 +35,7 @@ function emptyValuationStone(): ValuationStone {
     shape: "",
     colour: "",
     clarity: "",
+    approxWeight: false,
   };
 }
 
@@ -54,6 +57,8 @@ export default function ValuationPage() {
     clientName: "",
     date: todayString(),
     certificateNumber: "",
+    currency: "KSH",
+    customCurrency: "",
     items: [emptyItem()],
     valuerName: "Goldiam Jewellers",
   });
@@ -68,7 +73,14 @@ export default function ValuationPage() {
   const update = (
     field: keyof ValuationFormData,
     value: string | boolean | number
-  ) => setData((d) => ({ ...d, [field]: value }));
+  ) =>
+    setData((d) => {
+      const next = { ...d, [field]: value };
+      if (field === "currency" && value !== "Other") {
+        next.customCurrency = "";
+      }
+      return next;
+    });
 
   const updateItem = (
     idx: number,
@@ -95,7 +107,7 @@ export default function ValuationPage() {
     itemIdx: number,
     stoneIdx: number,
     field: keyof ValuationStone,
-    value: string | number
+    value: string | number | boolean
   ) =>
     setData((d) => ({
       ...d,
@@ -203,6 +215,22 @@ export default function ValuationPage() {
                 onChange={(v) => update("certificateNumber", v)}
               />
             </div>
+            <SelectField
+              label="Currency"
+              value={data.currency}
+              onChange={(v) => update("currency", v)}
+              options={CURRENCY_OPTIONS}
+              required
+            />
+            {data.currency === "Other" && (
+              <FormField
+                label="Custom Currency"
+                value={data.customCurrency}
+                onChange={(v) => update("customCurrency", v.toUpperCase())}
+                placeholder="e.g. EUR, GBP, AED"
+                required
+              />
+            )}
           </div>
 
           {/* Items */}
@@ -317,6 +345,13 @@ export default function ValuationPage() {
                               options={STONE_SHAPES}
                             />
                           </div>
+                          <ToggleField
+                            label="Approximate weight (stone is set, can't be weighed)"
+                            checked={stone.approxWeight ?? false}
+                            onChange={(v) =>
+                              updateStone(idx, sIdx, "approxWeight", v)
+                            }
+                          />
                           <div className="grid grid-cols-2 gap-3">
                             <FormField
                               label="Number of Stones"
@@ -355,7 +390,7 @@ export default function ValuationPage() {
                     updateItem(idx, "valueKSH", parseFloat(v) || 0)
                   }
                   type="number"
-                  prefix="KSH"
+                  prefix={data.currency === "Other" ? data.customCurrency || "CUR" : data.currency}
                   required
                 />
               </div>

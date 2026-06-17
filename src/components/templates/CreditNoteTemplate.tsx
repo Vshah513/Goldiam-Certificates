@@ -2,9 +2,10 @@ import CertificateShell from "@/components/layout/CertificateShell";
 import SignatureBlock from "@/components/templates/SignatureBlock";
 import { CreditNoteFormData } from "@/types";
 import {
-  formatKSH,
+  formatCurrency,
   formatDate,
   calculateExpiryDate,
+  resolveCurrency,
 } from "@/lib/formatters";
 import { amountToWords } from "@/lib/numberToWords";
 
@@ -13,6 +14,8 @@ interface CreditNoteTemplateProps {
 }
 
 export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
+  const activeCurrency = resolveCurrency(data.currency, data.customCurrency);
+
   const expiryDate =
     data.validityPeriod === "Custom" && data.customExpiry
       ? data.customExpiry
@@ -90,7 +93,7 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
                 Description
               </th>
               <th className="py-1.5 px-2 text-right font-semibold w-32">
-                Amount (KSH)
+                Amount ({activeCurrency})
               </th>
             </tr>
           </thead>
@@ -104,7 +107,11 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
               </td>
               <td className="py-2 px-2 text-right font-medium">
                 {data.creditAmountKSH
-                  ? formatKSH(data.creditAmountKSH)
+                  ? formatCurrency(
+                      data.creditAmountKSH,
+                      data.currency,
+                      data.customCurrency
+                    )
                   : "—"}
               </td>
             </tr>
@@ -114,7 +121,11 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
               <td className="py-2 px-2">Total Credit</td>
               <td className="py-2 px-2 text-right">
                 {data.creditAmountKSH
-                  ? formatKSH(data.creditAmountKSH)
+                  ? formatCurrency(
+                      data.creditAmountKSH,
+                      data.currency,
+                      data.customCurrency
+                    )
                   : "—"}
               </td>
             </tr>

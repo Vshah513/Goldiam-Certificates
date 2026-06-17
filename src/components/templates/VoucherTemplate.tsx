@@ -20,6 +20,9 @@ const VALUE_INK = "#2A2206"; // amount, sits on the parchment value box
 const FILL_GOLD = "#E7D295"; // voucher id / valid-until values on dark
 
 export default function VoucherTemplate({ data }: VoucherTemplateProps) {
+  const activeCurrency =
+    data.currency === "Other" ? data.customCurrency?.trim() || "CUR" : data.currency || "KSH";
+
   const expiryDate =
     data.validityPeriod === "Custom" && data.customExpiryDate
       ? data.customExpiryDate
@@ -33,7 +36,9 @@ export default function VoucherTemplate({ data }: VoucherTemplateProps) {
         : "";
 
   const amount =
-    data.amountKSH > 0 ? new Intl.NumberFormat("en-KE").format(data.amountKSH) : "";
+    data.amountKSH > 0
+      ? `${activeCurrency} ${new Intl.NumberFormat("en-KE").format(data.amountKSH)}`
+      : "";
 
   return (
     <div

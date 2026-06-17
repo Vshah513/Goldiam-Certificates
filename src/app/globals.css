@@ -22,6 +22,17 @@
   word-spacing: 0.3em;
 }
 
+/* Inline name inside a sentence. Italianno's tall script otherwise sinks below
+   the text baseline in print; pin it on the line and give it breathing room. */
+.calligraphy-inline {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: baseline;
+  position: relative;
+  top: -0.06em;
+  padding: 0 0.25em;
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--color-ivory);

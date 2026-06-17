@@ -1,7 +1,7 @@
 import CertificateShell from "@/components/layout/CertificateShell";
 import SignatureBlock from "@/components/templates/SignatureBlock";
 import { ValuationFormData, ValuationItem, ValuationStone } from "@/types";
-import { formatKSH, formatDate } from "@/lib/formatters";
+import { formatCurrency, formatDate, resolveCurrency } from "@/lib/formatters";
 import { amountToWords } from "@/lib/numberToWords";
 
 interface ValuationTemplateProps {
@@ -10,6 +10,7 @@ interface ValuationTemplateProps {
 
 export default function ValuationTemplate({ data }: ValuationTemplateProps) {
   const total = data.items.reduce((sum, item) => sum + (item.valueKSH || 0), 0);
+  const activeCurrency = resolveCurrency(data.currency, data.customCurrency);
 
   return (
     <CertificateShell title="Valuation Certificate">
@@ -25,21 +26,21 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
       </div>
 
       {/* Salutation */}
-      <p className="font-serif text-base font-semibold mb-3">
+      <p className="font-serif text-base font-semibold mb-3 text-center">
         To Whom It May Concern
       </p>
 
       {/* Client intro */}
-      <p className="mb-3 text-[13px] leading-relaxed">
+      <p className="mb-3 text-[13px] leading-relaxed text-center">
         The following item(s) belonging to{" "}
-        <strong className="font-calligraphy text-xl text-dark not-italic">
+        <strong className="font-calligraphy calligraphy-inline text-xl text-dark not-italic">
           {data.clientName || "________________"}
         </strong>{" "}
         have been examined and valued by us for insurance replacement purposes.
       </p>
 
       {/* Disclaimer */}
-      <p className="mb-4 text-[11px] leading-relaxed text-muted italic">
+      <p className="mb-4 text-[11px] leading-relaxed text-muted italic text-center">
         The values stated herein represent the estimated retail replacement
         value for insurance purposes only. This valuation does not constitute
         an offer to purchase or sell. Goldiam Jewellers accepts no liability
@@ -56,7 +57,7 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
                 Description
               </th>
               <th className="py-1.5 px-2 text-right font-semibold w-28">
-                Value (KSH)
+                Value ({activeCurrency})
               </th>
             </tr>
           </thead>
@@ -86,7 +87,9 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
                   <td className="py-2 px-2 text-muted">{idx + 1}</td>
                   <td className="py-2 px-2">{description}</td>
                   <td className="py-2 px-2 text-right font-medium">
-                    {item.valueKSH ? formatKSH(item.valueKSH) : "—"}
+                    {item.valueKSH
+                      ? formatCurrency(item.valueKSH, data.currency, data.customCurrency)
+                      : "—"}
                   </td>
                 </tr>
               );
@@ -97,7 +100,9 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
               <td className="py-2 px-2" colSpan={2}>
                 Total
               </td>
-              <td className="py-2 px-2 text-right">{formatKSH(total)}</td>
+              <td className="py-2 px-2 text-right">
+                {formatCurrency(total, data.currency, data.customCurrency)}
+              </td>
             </tr>
           </tfoot>
         </table>
@@ -105,13 +110,13 @@ export default function ValuationTemplate({ data }: ValuationTemplateProps) {
 
       {/* Amount in words */}
       {total > 0 && (
-        <p className="text-[11px] italic text-muted mb-6">
+        <p className="text-[11px] italic text-muted mb-6 text-center">
           ({amountToWords(total)})
         </p>
       )}
 
       {/* Signature */}
-      <div className="mt-auto pt-6">
+      <div className="mt-auto pt-6 flex justify-center text-center">
         <SignatureBlock
           showSignature={data.showSignature}
           signatureScale={data.signatureScale}
@@ -155,7 +160,8 @@ function formatStone(stone: ValuationStone): string {
   const parts: string[] = [];
   if (stone.count) parts.push(`${stone.count}×`);
   if (stone.name) parts.push(stone.name);
-  if (stone.weight) parts.push(`${stone.weight} CT`);
+  if (stone.weight)
+    parts.push(`${stone.approxWeight ? "Approx. " : ""}${stone.weight} CT`);
   if (stone.shape) parts.push(stone.shape);
   if (stone.colour) parts.push(stone.colour);
   if (stone.clarity) parts.push(stone.clarity);

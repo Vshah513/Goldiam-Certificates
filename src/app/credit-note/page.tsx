@@ -19,6 +19,7 @@ import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
 
 const CN_VALIDITY = ["6 months", "1 year", "No expiry", "Custom"] as const;
+const CURRENCY_OPTIONS = ["KSH", "USD", "Other"] as const;
 
 export default function CreditNotePage() {
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,8 @@ export default function CreditNotePage() {
     reason: "",
     reasonDetails: "",
     creditAmountKSH: 0,
+    currency: "KSH",
+    customCurrency: "",
     validityPeriod: "6 months",
     customExpiry: "",
     issuedBy: "",
@@ -46,7 +49,14 @@ export default function CreditNotePage() {
   const update = (
     field: keyof CreditNoteFormData,
     value: string | number | boolean
-  ) => setData((d) => ({ ...d, [field]: value }));
+  ) =>
+    setData((d) => {
+      const next = { ...d, [field]: value };
+      if (field === "currency" && value !== "Other") {
+        next.customCurrency = "";
+      }
+      return next;
+    });
 
   const docTitle = `Goldiam_CreditNote_${data.clientName || "Draft"}_${data.dateIssued}`;
 
@@ -146,9 +156,25 @@ export default function CreditNotePage() {
               value={data.creditAmountKSH || ""}
               onChange={(v) => update("creditAmountKSH", parseFloat(v) || 0)}
               type="number"
-              prefix="KSH"
+              prefix={data.currency === "Other" ? data.customCurrency || "CUR" : data.currency}
               required
             />
+            <SelectField
+              label="Currency"
+              value={data.currency}
+              onChange={(v) => update("currency", v)}
+              options={CURRENCY_OPTIONS}
+              required
+            />
+            {data.currency === "Other" && (
+              <FormField
+                label="Custom Currency"
+                value={data.customCurrency}
+                onChange={(v) => update("customCurrency", v.toUpperCase())}
+                placeholder="e.g. EUR, GBP, AED"
+                required
+              />
+            )}
             <SelectField
               label="Validity Period"
               value={data.validityPeriod}

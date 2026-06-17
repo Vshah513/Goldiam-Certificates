@@ -16,6 +16,8 @@ import { VALIDITY_OPTIONS } from "@/lib/constants";
 import { generateCertificateNumber } from "@/lib/certificateNumbers";
 import { todayString } from "@/lib/formatters";
 
+const CURRENCY_OPTIONS = ["KSH", "USD", "Other"] as const;
+
 function generateVoucherCode(name: string): string {
   const year = new Date().getFullYear();
   const first = name.trim().split(/\s+/)[0]?.toUpperCase() || "GUEST";
@@ -28,6 +30,8 @@ export default function VoucherPage() {
     recipientName: "",
     occasion: "",
     amountKSH: 0,
+    currency: "KSH",
+    customCurrency: "",
     issuedBy: "",
     issueDate: todayString(),
     validityPeriod: "6 months",
@@ -48,6 +52,9 @@ export default function VoucherPage() {
       const next = { ...d, [field]: value };
       if (field === "recipientName" && typeof value === "string") {
         next.voucherCode = generateVoucherCode(value);
+      }
+      if (field === "currency" && value !== "Other") {
+        next.customCurrency = "";
       }
       return next;
     });
@@ -114,9 +121,25 @@ export default function VoucherPage() {
               value={data.amountKSH || ""}
               onChange={(v) => update("amountKSH", parseFloat(v) || 0)}
               type="number"
-              prefix="KSH"
+              prefix={data.currency === "Other" ? data.customCurrency || "CUR" : data.currency}
               required
             />
+            <SelectField
+              label="Currency"
+              value={data.currency}
+              onChange={(v) => update("currency", v)}
+              options={CURRENCY_OPTIONS}
+              required
+            />
+            {data.currency === "Other" && (
+              <FormField
+                label="Custom Currency"
+                value={data.customCurrency}
+                onChange={(v) => update("customCurrency", v.toUpperCase())}
+                placeholder="e.g. EUR, GBP, AED"
+                required
+              />
+            )}
           </div>
 
           <div className="space-y-4 p-4 bg-white rounded-lg border border-dark/10">

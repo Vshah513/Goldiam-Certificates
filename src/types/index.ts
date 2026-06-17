@@ -45,6 +45,8 @@ export interface Stone {
   numberOfStones: number;
   stoneColour: string;
   stoneClarity: string;
+  /** Stone is set in the piece and can't be weighed, so the carat is an estimate. */
+  approxWeight?: boolean;
 }
 
 export interface GuaranteeFormData {

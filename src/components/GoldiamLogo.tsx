@@ -20,7 +20,7 @@ export default function GoldiamLogo({
 }: GoldiamLogoProps) {
   const { width, height } = sizes[size];
   return (
-    <div className={`relative select-none ${className}`}>
+    <div className={`relative inline-block select-none ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={LOGO_SRC}
@@ -29,7 +29,7 @@ export default function GoldiamLogo({
         height={height}
         loading="eager"
         decoding="sync"
-        className="object-contain object-left"
+        className="object-contain object-center"
         style={{ width, height }}
       />
     </div>

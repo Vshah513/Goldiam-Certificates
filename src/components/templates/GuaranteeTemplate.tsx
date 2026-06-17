@@ -27,7 +27,7 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
       {/* Client */}
       <p className="mb-2 text-[13px]">
         <span className="text-muted">Issued to: </span>
-        <strong className="font-calligraphy text-lg text-dark not-italic">
+        <strong className="font-calligraphy calligraphy-inline text-xl text-dark not-italic">
           {data.clientName || "________________"}
         </strong>
       </p>
@@ -90,8 +90,10 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
                     {stone.stoneName || "—"}
                   </td>
                   <td className="py-1.5 px-1.5">{stone.stoneType || "—"}</td>
-                  <td className="py-1.5 px-1.5 text-right">
-                    {stone.stoneWeight ? stone.stoneWeight : "—"}
+                  <td className="py-1.5 px-1.5 text-right whitespace-nowrap">
+                    {stone.stoneWeight
+                      ? `${stone.approxWeight ? "Approx. " : ""}${stone.stoneWeight}`
+                      : "—"}
                   </td>
                   <td className="py-1.5 px-1.5">{stone.stoneShape || "—"}</td>
                   <td className="py-1.5 px-1.5 text-right">

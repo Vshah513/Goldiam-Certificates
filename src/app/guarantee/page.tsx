@@ -34,6 +34,7 @@ function emptyStone(): Stone {
     numberOfStones: 0,
     stoneColour: "",
     stoneClarity: "",
+    approxWeight: false,
   };
 }
 
@@ -68,7 +69,7 @@ export default function GuaranteePage() {
   const updateStone = (
     idx: number,
     field: keyof Stone,
-    value: string | number
+    value: string | number | boolean
   ) =>
     setData((d) => ({
       ...d,
@@ -251,6 +252,11 @@ export default function GuaranteePage() {
                         options={STONE_SHAPES}
                       />
                     </div>
+                    <ToggleField
+                      label="Approximate weight (stone is set, can't be weighed)"
+                      checked={stone.approxWeight ?? false}
+                      onChange={(v) => updateStone(idx, "approxWeight", v)}
+                    />
                     <div className="grid grid-cols-2 gap-3">
                       <FormField
                         label="Number of Stones"

@@ -11,7 +11,7 @@
 
   --font-serif: var(--font-cormorant), "Cormorant Garamond", serif;
   --font-sans: var(--font-lato), "Lato", sans-serif;
-  --font-calligraphy: var(--font-calligraphy), "Italianno", cursive;
+  --font-calligraphy: var(--font-calligraphy), "Kaushan Script", cursive;
 }
 
 /* Calligraphy style for client/customer names on certificates.
@@ -19,7 +19,7 @@
    "Viraj Shah" read as two words instead of running together. */
 .font-calligraphy {
   font-family: var(--font-calligraphy);
-  word-spacing: 0.3em;
+  word-spacing: 0.15em;
 }
 
 /* Inline name inside a sentence. Italianno's tall script otherwise sinks below

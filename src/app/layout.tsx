@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Lato, Italianno } from "next/font/google";
+import { Cormorant_Garamond, Lato, Kaushan_Script } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -16,7 +16,7 @@ const lato = Lato({
   display: "swap",
 });
 
-const italianno = Italianno({
+const kaushanScript = Kaushan_Script({
   variable: "--font-calligraphy",
   subsets: ["latin"],
   weight: ["400"],
@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorant.variable} ${lato.variable} ${italianno.variable} antialiased`}>
+      <body className={`${cormorant.variable} ${lato.variable} ${kaushanScript.variable} antialiased`}>
         {children}
       </body>
     </html>

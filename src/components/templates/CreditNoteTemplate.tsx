@@ -37,7 +37,7 @@ export default function CreditNoteTemplate({ data }: CreditNoteTemplateProps) {
         <div className="text-[13px]">
           <p>
             <span className="text-muted">Client: </span>
-            <strong className="font-calligraphy text-lg text-dark not-italic">
+            <strong className="font-calligraphy calligraphy-inline text-xl text-dark not-italic">
               {data.clientName || "________________"}
             </strong>
           </p>

@@ -49,6 +49,7 @@ export default function GuaranteePage() {
     metalColour: "",
     goldPurity: "",
     totalMetalWeight: 0,
+    hasMetal: true,
     hasStones: false,
     stones: [emptyStone()],
     additionalNotes: "",
@@ -161,36 +162,47 @@ export default function GuaranteePage() {
               placeholder="e.g. Ladies Ring"
               rows={2}
             />
-            <div className="grid grid-cols-2 gap-3">
-              <SelectField
-                label="Metal Type"
-                value={data.metalType}
-                onChange={(v) => update("metalType", v)}
-                options={METAL_TYPES}
-              />
-              <SelectField
-                label="Metal Colour"
-                value={data.metalColour}
-                onChange={(v) => update("metalColour", v)}
-                options={METAL_COLOURS}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <SelectField
-                label="Gold Purity"
-                value={data.goldPurity}
-                onChange={(v) => update("goldPurity", v)}
-                options={GOLD_KARATS}
-              />
-              <FormField
-                label="Total Metal Weight"
-                value={data.totalMetalWeight || ""}
-                onChange={(v) => update("totalMetalWeight", parseFloat(v) || 0)}
-                type="number"
-                suffix="g"
-                step="0.01"
-              />
-            </div>
+            <ToggleField
+              label="Has Metal?"
+              checked={data.hasMetal ?? true}
+              onChange={(v) => update("hasMetal", v)}
+            />
+            {(data.hasMetal ?? true) && (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <SelectField
+                    label="Metal Type"
+                    value={data.metalType}
+                    onChange={(v) => update("metalType", v)}
+                    options={METAL_TYPES}
+                  />
+                  <SelectField
+                    label="Metal Colour"
+                    value={data.metalColour}
+                    onChange={(v) => update("metalColour", v)}
+                    options={METAL_COLOURS}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <SelectField
+                    label="Gold Purity"
+                    value={data.goldPurity}
+                    onChange={(v) => update("goldPurity", v)}
+                    options={GOLD_KARATS}
+                  />
+                  <FormField
+                    label="Total Metal Weight"
+                    value={data.totalMetalWeight || ""}
+                    onChange={(v) =>
+                      update("totalMetalWeight", parseFloat(v) || 0)
+                    }
+                    type="number"
+                    suffix="g"
+                    step="0.01"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Stone details */}

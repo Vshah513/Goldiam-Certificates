@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import CertificateShell from "@/components/layout/CertificateShell";
 import SignatureBlock from "@/components/templates/SignatureBlock";
 import { GuaranteeFormData, Stone } from "@/types";
@@ -10,6 +11,12 @@ interface GuaranteeTemplateProps {
 export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
   const stones = getStones(data);
   const showStones = data.hasStones && stones.length > 0;
+  const showMetal = data.hasMetal ?? true;
+
+  // Only render an optional column when at least one stone has a value for it.
+  const stoneColumns = STONE_COLUMNS.filter((col) =>
+    col.always ? true : stones.some((s) => col.hasValue(s))
+  );
 
   return (
     <CertificateShell title="Certificate of Guarantee">
@@ -48,20 +55,22 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
       )}
 
       {/* Metal details */}
-      <div className="mb-4">
-        <h3 className="font-serif text-sm font-semibold uppercase tracking-wide text-gold mb-2">
-          Metal Details
-        </h3>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[12px]">
-          <DetailRow label="Metal Type" value={data.metalType} />
-          <DetailRow label="Colour" value={data.metalColour} />
-          <DetailRow label="Purity" value={data.goldPurity} />
-          <DetailRow
-            label="Total Weight"
-            value={data.totalMetalWeight ? `${data.totalMetalWeight}g` : ""}
-          />
+      {showMetal && (
+        <div className="mb-4">
+          <h3 className="font-serif text-sm font-semibold uppercase tracking-wide text-gold mb-2">
+            Metal Details
+          </h3>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[12px]">
+            <DetailRow label="Metal Type" value={data.metalType} />
+            <DetailRow label="Colour" value={data.metalColour} />
+            <DetailRow label="Purity" value={data.goldPurity} />
+            <DetailRow
+              label="Total Weight"
+              value={data.totalMetalWeight ? `${data.totalMetalWeight}g` : ""}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Stone details */}
       {showStones && (
@@ -72,35 +81,31 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
           <table className="w-full text-[11px] border-collapse">
             <thead>
               <tr className="border-b-2 border-dark text-dark">
-                <th className="py-1 px-1.5 text-left font-semibold w-6">#</th>
-                <th className="py-1 px-1.5 text-left font-semibold">Stone</th>
-                <th className="py-1 px-1.5 text-left font-semibold">Type</th>
-                <th className="py-1 px-1.5 text-right font-semibold">Wt (CT)</th>
-                <th className="py-1 px-1.5 text-left font-semibold">Shape</th>
-                <th className="py-1 px-1.5 text-right font-semibold">No.</th>
-                <th className="py-1 px-1.5 text-left font-semibold">Colour</th>
-                <th className="py-1 px-1.5 text-left font-semibold">Clarity</th>
+                {stoneColumns.map((col) => (
+                  <th
+                    key={col.key}
+                    className={`py-1 px-1.5 font-semibold ${
+                      col.align === "right" ? "text-right" : "text-left"
+                    } ${col.key === "index" ? "w-6" : ""}`}
+                  >
+                    {col.header}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {stones.map((stone, idx) => (
                 <tr key={idx} className="border-b border-dark/10">
-                  <td className="py-1.5 px-1.5 text-muted">{idx + 1}</td>
-                  <td className="py-1.5 px-1.5 font-medium">
-                    {stone.stoneName || "—"}
-                  </td>
-                  <td className="py-1.5 px-1.5">{stone.stoneType || "—"}</td>
-                  <td className="py-1.5 px-1.5 text-right whitespace-nowrap">
-                    {stone.stoneWeight
-                      ? `${stone.approxWeight ? "Approx. " : ""}${stone.stoneWeight}`
-                      : "—"}
-                  </td>
-                  <td className="py-1.5 px-1.5">{stone.stoneShape || "—"}</td>
-                  <td className="py-1.5 px-1.5 text-right">
-                    {stone.numberOfStones ? stone.numberOfStones : "—"}
-                  </td>
-                  <td className="py-1.5 px-1.5">{stone.stoneColour || "—"}</td>
-                  <td className="py-1.5 px-1.5">{stone.stoneClarity || "—"}</td>
+                  {stoneColumns.map((col) => (
+                    <td
+                      key={col.key}
+                      className={`py-1.5 px-1.5 ${
+                        col.align === "right" ? "text-right" : ""
+                      } ${col.cellClass ?? ""}`}
+                    >
+                      {col.cell(stone, idx)}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -139,6 +144,78 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
     </CertificateShell>
   );
 }
+
+interface StoneColumn {
+  key: string;
+  header: string;
+  align?: "left" | "right";
+  cellClass?: string;
+  /** Column always renders (e.g. the row number); others hide when empty for every stone. */
+  always?: boolean;
+  hasValue: (s: Stone) => boolean;
+  cell: (s: Stone, idx: number) => ReactNode;
+}
+
+// Optional columns render only when at least one stone fills them, so a blank
+// field (e.g. clarity left empty) drops out of the printout entirely.
+const STONE_COLUMNS: StoneColumn[] = [
+  {
+    key: "index",
+    header: "#",
+    always: true,
+    hasValue: () => true,
+    cell: (_s, idx) => <span className="text-muted">{idx + 1}</span>,
+    cellClass: "text-muted",
+  },
+  {
+    key: "name",
+    header: "Stone",
+    hasValue: (s) => !!s.stoneName,
+    cell: (s) => <span className="font-medium">{s.stoneName || "—"}</span>,
+  },
+  {
+    key: "type",
+    header: "Type",
+    hasValue: (s) => !!s.stoneType,
+    cell: (s) => s.stoneType || "—",
+  },
+  {
+    key: "weight",
+    header: "Wt (CT)",
+    align: "right",
+    cellClass: "whitespace-nowrap",
+    hasValue: (s) => !!s.stoneWeight,
+    cell: (s) =>
+      s.stoneWeight
+        ? `${s.approxWeight ? "Approx. " : ""}${s.stoneWeight}`
+        : "—",
+  },
+  {
+    key: "shape",
+    header: "Shape",
+    hasValue: (s) => !!s.stoneShape,
+    cell: (s) => s.stoneShape || "—",
+  },
+  {
+    key: "count",
+    header: "No.",
+    align: "right",
+    hasValue: (s) => !!s.numberOfStones,
+    cell: (s) => (s.numberOfStones ? s.numberOfStones : "—"),
+  },
+  {
+    key: "colour",
+    header: "Colour",
+    hasValue: (s) => !!s.stoneColour,
+    cell: (s) => s.stoneColour || "—",
+  },
+  {
+    key: "clarity",
+    header: "Clarity",
+    hasValue: (s) => !!s.stoneClarity,
+    cell: (s) => s.stoneClarity || "—",
+  },
+];
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (

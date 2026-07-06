@@ -58,6 +58,8 @@ export interface GuaranteeFormData {
   metalColour: string;
   goldPurity: string;
   totalMetalWeight: number;
+  /** Optional so certificates saved before the metal toggle default to showing metal. */
+  hasMetal?: boolean;
   hasStones: boolean;
   stones: Stone[];
   // Legacy single-stone fields — optional so previously-saved certificates still load.

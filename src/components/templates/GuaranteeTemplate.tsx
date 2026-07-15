@@ -10,13 +10,28 @@ interface GuaranteeTemplateProps {
 
 export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
   const stones = getStones(data);
-  const showStones = data.hasStones && stones.length > 0;
-  const showMetal = data.hasMetal ?? true;
+
+  // Metal fields are all optional — only keep the ones actually filled in, and
+  // hide the whole section if metal is on but nothing has been entered yet.
+  const metalFields = [
+    { label: "Metal Type", value: data.metalType },
+    { label: "Colour", value: data.metalColour },
+    { label: "Purity", value: data.goldPurity },
+    {
+      label: "Total Weight",
+      value: data.totalMetalWeight ? `${data.totalMetalWeight}g` : "",
+    },
+  ].filter((f) => f.value);
+  const showMetal = (data.hasMetal ?? true) && metalFields.length > 0;
 
   // Only render an optional column when at least one stone has a value for it.
   const stoneColumns = STONE_COLUMNS.filter((col) =>
     col.always ? true : stones.some((s) => col.hasValue(s))
   );
+  // Show the stone table only once at least one real detail has been entered,
+  // so an empty "Has Stones" toggle doesn't print a lone row-number column.
+  const showStones =
+    data.hasStones && stones.length > 0 && stoneColumns.length > 1;
 
   return (
     <CertificateShell title="Certificate of Guarantee">
@@ -61,13 +76,9 @@ export default function GuaranteeTemplate({ data }: GuaranteeTemplateProps) {
             Metal Details
           </h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[12px]">
-            <DetailRow label="Metal Type" value={data.metalType} />
-            <DetailRow label="Colour" value={data.metalColour} />
-            <DetailRow label="Purity" value={data.goldPurity} />
-            <DetailRow
-              label="Total Weight"
-              value={data.totalMetalWeight ? `${data.totalMetalWeight}g` : ""}
-            />
+            {metalFields.map((f) => (
+              <DetailRow key={f.label} label={f.label} value={f.value} />
+            ))}
           </div>
         </div>
       )}
@@ -171,13 +182,13 @@ const STONE_COLUMNS: StoneColumn[] = [
     key: "name",
     header: "Stone",
     hasValue: (s) => !!s.stoneName,
-    cell: (s) => <span className="font-medium">{s.stoneName || "—"}</span>,
+    cell: (s) => <span className="font-medium">{s.stoneName}</span>,
   },
   {
     key: "type",
     header: "Type",
     hasValue: (s) => !!s.stoneType,
-    cell: (s) => s.stoneType || "—",
+    cell: (s) => s.stoneType,
   },
   {
     key: "weight",
@@ -188,32 +199,32 @@ const STONE_COLUMNS: StoneColumn[] = [
     cell: (s) =>
       s.stoneWeight
         ? `${s.approxWeight ? "Approx. " : ""}${s.stoneWeight}`
-        : "—",
+        : "",
   },
   {
     key: "shape",
     header: "Shape",
     hasValue: (s) => !!s.stoneShape,
-    cell: (s) => s.stoneShape || "—",
+    cell: (s) => s.stoneShape,
   },
   {
     key: "count",
     header: "No.",
     align: "right",
     hasValue: (s) => !!s.numberOfStones,
-    cell: (s) => (s.numberOfStones ? s.numberOfStones : "—"),
+    cell: (s) => (s.numberOfStones ? s.numberOfStones : ""),
   },
   {
     key: "colour",
     header: "Colour",
     hasValue: (s) => !!s.stoneColour,
-    cell: (s) => s.stoneColour || "—",
+    cell: (s) => s.stoneColour,
   },
   {
     key: "clarity",
     header: "Clarity",
     hasValue: (s) => !!s.stoneClarity,
-    cell: (s) => s.stoneClarity || "—",
+    cell: (s) => s.stoneClarity,
   },
 ];
 
@@ -221,7 +232,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex">
       <span className="text-muted w-28 shrink-0">{label}:</span>
-      <span className="font-medium">{value || "—"}</span>
+      <span className="font-medium">{value}</span>
     </div>
   );
 }
